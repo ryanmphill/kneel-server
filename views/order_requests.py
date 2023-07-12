@@ -1,7 +1,7 @@
 ORDERS = [
     {
       "timestamp": 1684513128264,
-      "orderId": 1,
+      "metalId": 1,
       "sizeId": 1,
       "styleId": 1,
       "typeId": 1,
@@ -9,7 +9,7 @@ ORDERS = [
     },
     {
       "timestamp": 1684513184661,
-      "orderId": 1,
+      "metalId": 1,
       "sizeId": 1,
       "styleId": 1,
       "typeId": 2,
@@ -17,7 +17,7 @@ ORDERS = [
     },
     {
       "timestamp": 1684513263009,
-      "orderId": 1,
+      "metalId": 1,
       "sizeId": 1,
       "styleId": 1,
       "typeId": 3,
@@ -25,7 +25,7 @@ ORDERS = [
     },
     {
       "timestamp": 1684513509513,
-      "orderId": 2,
+      "metalId": 2,
       "sizeId": 2,
       "styleId": 2,
       "typeId": 1,
@@ -33,7 +33,7 @@ ORDERS = [
     },
     {
       "timestamp": 1684513527521,
-      "orderId": 3,
+      "metalId": 3,
       "sizeId": 3,
       "styleId": 3,
       "typeId": 1,
@@ -41,7 +41,7 @@ ORDERS = [
     },
     {
       "timestamp": 1684513790680,
-      "orderId": 5,
+      "metalId": 5,
       "sizeId": 5,
       "styleId": 3,
       "typeId": 2,
@@ -49,7 +49,7 @@ ORDERS = [
     },
     {
       "timestamp": 1684513830825,
-      "orderId": 1,
+      "metalId": 1,
       "sizeId": 1,
       "styleId": 2,
       "typeId": 3,
@@ -75,3 +75,21 @@ def get_single_order(id):
             requested_order = order
 
     return requested_order
+
+def create_order(order):
+    """Function to add order via POST request"""
+
+    # Get the id value of the last order in the list
+    max_id = ORDERS[-1]["id"]
+
+    # Add 1 to whatever that number is
+    new_id = max_id + 1
+
+    # Add an `id` property to the order dictionary
+    order["id"] = new_id
+
+    # Add the order dictionary to the list
+    ORDERS.append(order)
+
+    # Return the dictionary with `id` property added
+    return order

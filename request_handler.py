@@ -2,7 +2,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_all_metals, get_all_sizes, get_all_styles, get_all_orders
 from views import get_single_metal, get_single_order, get_single_size, get_single_style
-
+from views import create_order
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Controls the functionality of any GET, PUT, POST, DELETE requests to the server
@@ -99,9 +99,20 @@ class HandleRequests(BaseHTTPRequestHandler):
         self._set_headers(201)
 
         content_len = int(self.headers.get('content-length', 0))
-        post_body = self.rfile.read(content_len)
-        response = { "payload" : post_body }
-        self.wfile.write(json.dumps(response).encode())
+
+        # Convert JSON string to a Python dictionary
+        post_body = json.loads(self.rfile.read(content_len))
+
+        # Parse the URL
+        (resource, _) = self.parse_url(self.path)
+
+        # Initialize new item to post
+        new_post = None
+
+        if resource == "orders":
+            new_post = create_order(post_body)
+
+        self.wfile.write(json.dumps(new_post).encode())
 
     def do_PUT(self):
         """Handles PUT requests to the server """
