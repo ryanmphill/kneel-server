@@ -1,7 +1,7 @@
 ORDERS = [
     {
       "timestamp": 1684513128264,
-      "metalId": 1,
+      "orderId": 1,
       "sizeId": 1,
       "styleId": 1,
       "typeId": 1,
@@ -9,7 +9,7 @@ ORDERS = [
     },
     {
       "timestamp": 1684513184661,
-      "metalId": 1,
+      "orderId": 1,
       "sizeId": 1,
       "styleId": 1,
       "typeId": 2,
@@ -17,7 +17,7 @@ ORDERS = [
     },
     {
       "timestamp": 1684513263009,
-      "metalId": 1,
+      "orderId": 1,
       "sizeId": 1,
       "styleId": 1,
       "typeId": 3,
@@ -25,7 +25,7 @@ ORDERS = [
     },
     {
       "timestamp": 1684513509513,
-      "metalId": 2,
+      "orderId": 2,
       "sizeId": 2,
       "styleId": 2,
       "typeId": 1,
@@ -33,7 +33,7 @@ ORDERS = [
     },
     {
       "timestamp": 1684513527521,
-      "metalId": 3,
+      "orderId": 3,
       "sizeId": 3,
       "styleId": 3,
       "typeId": 1,
@@ -41,7 +41,7 @@ ORDERS = [
     },
     {
       "timestamp": 1684513790680,
-      "metalId": 5,
+      "orderId": 5,
       "sizeId": 5,
       "styleId": 3,
       "typeId": 2,
@@ -49,7 +49,7 @@ ORDERS = [
     },
     {
       "timestamp": 1684513830825,
-      "metalId": 1,
+      "orderId": 1,
       "sizeId": 1,
       "styleId": 2,
       "typeId": 3,
@@ -60,3 +60,18 @@ ORDERS = [
 def get_all_orders():
     """Return list of all orders"""
     return ORDERS
+
+def get_single_order(id):
+    """Get a single dictionary from the list"""
+    # Variable to hold the found order, if it exists
+    requested_order = None
+
+    # Iterate the ORDERS list above. Very similar to the
+    # for..of loops you used in JavaScript.
+    for order in ORDERS:
+        # Dictionaries in Python use [] notation to find a key
+        # instead of the dot notation that JavaScript used.
+        if order["id"] == id:
+            requested_order = order
+
+    return requested_order

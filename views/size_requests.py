@@ -29,3 +29,18 @@ SIZES = [
 def get_all_sizes():
     """Return list of all sizes"""
     return SIZES
+
+def get_single_size(id):
+    """Get a single dictionary from the list"""
+    # Variable to hold the found size, if it exists
+    requested_size = None
+
+    # Iterate the SIZES list above. Very similar to the
+    # for..of loops you used in JavaScript.
+    for size in SIZES:
+        # Dictionaries in Python use [] notation to find a key
+        # instead of the dot notation that JavaScript used.
+        if size["id"] == id:
+            requested_size = size
+
+    return requested_size
