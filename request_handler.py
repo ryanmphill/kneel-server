@@ -2,7 +2,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_all_metals, get_all_sizes, get_all_styles, get_all_orders, get_all_types
 from views import get_single_metal, get_single_order, get_single_size, get_single_style
-from views import create_order, get_single_type
+from views import create_order, get_single_type, delete_order
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Controls the functionality of any GET, PUT, POST, DELETE requests to the server
@@ -129,6 +129,24 @@ class HandleRequests(BaseHTTPRequestHandler):
     def do_PUT(self):
         """Handles PUT requests to the server """
         self.do_POST()
+
+    def do_DELETE(self):
+        """Handle a DELETE request"""
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+
+        # Delete a single order from the list
+        if resource == "orders":
+            try_delete = delete_order(id)
+            if try_delete == "success":
+                # Set a 204 response code
+                self._set_headers(204)
+            else:
+                self._set_headers(404)
+        # Encode empty response
+        self.wfile.write("".encode())
 
     def _set_headers(self, status):
         """Sets the status code, Content-Type and Access-Control-Allow-Origin

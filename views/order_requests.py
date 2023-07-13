@@ -93,3 +93,25 @@ def create_order(order):
 
     # Return the dictionary with `id` property added
     return order
+
+def delete_order(id):
+    """Delete order from list"""
+    # Initial -1 value for order index, in case one isn't found
+    order_index = -1
+
+    # Set status of delete to None by default
+    delete_status = None
+
+    # Iterate the ORDERS list, but use enumerate() so that you
+    # can access the index value of each item
+    for index, order in enumerate(ORDERS):
+        if order["id"] == id:
+            # Found the order. Store the current index.
+            order_index = index
+
+    # If the order was found, use pop(int) to remove it from list
+    if order_index >= 0:
+        ORDERS.pop(order_index)
+        delete_status = "success"
+
+    return delete_status
