@@ -115,3 +115,17 @@ def delete_order(id):
         delete_status = "success"
 
     return delete_status
+
+def update_order(id, new_order):
+    """Update an order in the list"""
+    # Iterate the ORDERS list, but use enumerate() so that
+    # you can access the index value of each item.
+    update_status = None
+
+    for index, order in enumerate(ORDERS):
+        if order["id"] == id:
+            # Found the order. Update the value.
+            ORDERS[index] = new_order
+            update_status = "success"
+            break
+    return update_status
