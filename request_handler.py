@@ -1,8 +1,8 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from views import get_all_metals, get_all_sizes, get_all_styles, get_all_orders
+from views import get_all_metals, get_all_sizes, get_all_styles, get_all_orders, get_all_types
 from views import get_single_metal, get_single_order, get_single_size, get_single_style
-from views import create_order
+from views import create_order, get_single_type
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Controls the functionality of any GET, PUT, POST, DELETE requests to the server
@@ -87,6 +87,18 @@ class HandleRequests(BaseHTTPRequestHandler):
             else:
                 self._set_headers(200)
                 response = get_all_orders()
+
+        elif resource == "types":
+            if id is not None:
+                single_type = get_single_type(id)
+                if single_type is not None:
+                    self._set_headers(200)
+                    response = single_type
+                else:
+                    self._set_headers(404)
+            else:
+                self._set_headers(200)
+                response = get_all_types()
 
         else:
             self._set_headers(404)
