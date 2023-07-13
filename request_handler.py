@@ -108,7 +108,6 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     def do_POST(self):
         """Handles POST requests to the server """
-        self._set_headers(201)
 
         content_len = int(self.headers.get('content-length', 0))
 
@@ -120,11 +119,17 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         # Initialize new item to post
         new_post = None
+        response = {}
 
         if resource == "orders":
             new_post = create_order(post_body)
+            self._set_headers(201)
+            response = new_post
+        else:
+            self._set_headers(403)
+            response = "POST operations only supported for orders"
 
-        self.wfile.write(json.dumps(new_post).encode())
+        self.wfile.write(json.dumps(response).encode())
 
     def do_PUT(self):
         """Handles PUT requests to the server """
