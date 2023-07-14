@@ -48,6 +48,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = single_metal
                 else:
                     self._set_headers(404)
+                    response = {"message": "Requested metal is not in inventory"}
             else:
                 self._set_headers(200)
                 response = get_all_metals()
@@ -60,6 +61,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = single_size
                 else:
                     self._set_headers(404)
+                    response = {"message": "Requested size is not an available option"}
             else:
                 self._set_headers(200)
                 response = get_all_sizes()
@@ -72,6 +74,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = single_style
                 else:
                     self._set_headers(404)
+                    response = {"message": "No such style exists"}
             else:
                 self._set_headers(200)
                 response = get_all_styles()
@@ -84,6 +87,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = single_order
                 else:
                     self._set_headers(404)
+                    response = {"message": "Order has never been place or has been cancelled"}
             else:
                 self._set_headers(200)
                 response = get_all_orders()
@@ -96,6 +100,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = single_type
                 else:
                     self._set_headers(404)
+                    response = {"message": "Requested type does not exist"}
             else:
                 self._set_headers(200)
                 response = get_all_types()
