@@ -1,3 +1,8 @@
+from .metal_requests import get_single_metal
+from .type_requests import get_single_type
+from .style_requests import get_single_style
+from .size_requests import get_single_size
+
 ORDERS = [
     {
       "timestamp": 1684513128264,
@@ -73,6 +78,22 @@ def get_single_order(id):
         # instead of the dot notation that JavaScript used.
         if order["id"] == id:
             requested_order = order
+            # Get the choices that correspond to the foreign keys
+            order_metal = get_single_metal(order["metalId"])
+            order_size = get_single_size(order["sizeId"])
+            order_style = get_single_style(order["styleId"])
+            order_type = get_single_type(order["typeId"])
+            # Add the foreign dictionaries to the requested order dictionary
+            requested_order["metal"] = order_metal
+            requested_order["size"] = order_size
+            requested_order["style"] = order_style
+            requested_order["type"] = order_type
+            # Delete the foreign keys since they are no longer needed
+            del requested_order["metalId"]
+            del requested_order["sizeId"]
+            del requested_order["styleId"]
+            del requested_order["typeId"]
+            break
 
     return requested_order
 
