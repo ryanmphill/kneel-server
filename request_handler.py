@@ -2,7 +2,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_all_metals, get_all_sizes, get_all_styles, get_all_orders, get_all_types
 from views import get_single_metal, get_single_order, get_single_size, get_single_style
-from views import create_order, get_single_type, delete_order, update_order
+from views import create_order, get_single_type, delete_order
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Controls the functionality of any GET, PUT, POST, DELETE requests to the server
@@ -156,21 +156,25 @@ class HandleRequests(BaseHTTPRequestHandler):
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
 
+        response = ""
+
         # Parse the URL
-        (resource, id) = self.parse_url(self.path)
+        (resource, _) = self.parse_url(self.path)
 
         # Update a single order in the list
         if resource == "orders":
-            try_update = update_order(id, post_body)
-            if try_update == "success":
-                self._set_headers(204)
-            else:
-                self._set_headers(404)
+            message = {"message": "Order already paid for -- No modifications allowed."}
+            response = json.dumps(message)
+            self._set_headers(405)
+        elif resource in ["metals", "types", "sizes", "styles"]:
+            message = {"message": "Modifications not allowed"}
+            response = json.dumps(message)
+            self._set_headers(405)
         else:
-            self._set_headers(403)
+            self._set_headers(404)
 
         # Empty response
-        self.wfile.write("".encode())
+        self.wfile.write(response.encode())
 
     def do_DELETE(self):
         """Handle a DELETE request"""
