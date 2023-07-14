@@ -33,5 +33,6 @@ def get_single_type(id):
         # instead of the dot notation that JavaScript used.
         if type["id"] == id:
             requested_type = type
+            break
 
     return requested_type

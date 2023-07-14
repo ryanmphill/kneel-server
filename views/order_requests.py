@@ -129,6 +129,7 @@ def delete_order(id):
         if order["id"] == id:
             # Found the order. Store the current index.
             order_index = index
+            break
 
     # If the order was found, use pop(int) to remove it from list
     if order_index >= 0:

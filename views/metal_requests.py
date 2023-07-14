@@ -43,5 +43,6 @@ def get_single_metal(id):
         # instead of the dot notation that JavaScript used.
         if metal["id"] == id:
             requested_metal = metal
+            break
 
     return requested_metal

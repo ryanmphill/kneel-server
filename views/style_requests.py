@@ -32,5 +32,6 @@ def get_single_style(id):
         # instead of the dot notation that JavaScript used.
         if style["id"] == id:
             requested_style = style
+            break
 
     return requested_style

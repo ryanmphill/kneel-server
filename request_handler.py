@@ -123,15 +123,29 @@ class HandleRequests(BaseHTTPRequestHandler):
         (resource, _) = self.parse_url(self.path)
 
         # Initialize new item to post
-        new_post = None
-        response = {}
+        response = None
+
+        # Define function that finds any missing or extra keys on the post body
+        def find_missing_keys(post_dictionary, list_of_keys):
+            message = []
+            for key in list_of_keys:
+                if key not in post_dictionary:
+                    message.append({ "message": f"{key} is required" })
+            if len(post_dictionary) > len(list_of_keys):
+                message.append({ "message": "Looks like there are some unecessary keys" })
+            return message
 
         if resource == "orders":
-            new_post = create_order(post_body)
-            self._set_headers(201)
-            response = new_post
+            required_keys = ["timestamp", "metalId", "styleId", "sizeId", "typeId"]
+            error_messages = find_missing_keys(post_body, required_keys)
+            if len(error_messages) == 0:
+                response = create_order(post_body)
+                self._set_headers(201)
+            else:
+                response = error_messages
+                self._set_headers(400)
         else:
-            self._set_headers(403)
+            self._set_headers(405)
             response = "POST operations only supported for orders"
 
         self.wfile.write(json.dumps(response).encode())

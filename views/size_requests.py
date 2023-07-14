@@ -42,5 +42,6 @@ def get_single_size(id):
         # instead of the dot notation that JavaScript used.
         if size["id"] == id:
             requested_size = size
+            break
 
     return requested_size
