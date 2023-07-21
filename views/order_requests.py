@@ -103,19 +103,34 @@ def get_all_orders():
     return all_orders
 
 def get_single_order(id):
-    """Get a single dictionary from the list"""
-    # Variable to hold the found order, if it exists
-    requested_order = None
+    """Get a single order from database"""
+    with sqlite3.connect("./kneeldiamonds.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-    # Iterate the ORDERS list above. Very similar to the
-    # for..of loops you used in JavaScript.
-    for order in ORDERS:
-        # Dictionaries in Python use [] notation to find a key
-        # instead of the dot notation that JavaScript used.
-        if order["id"] == id:
-            requested_order = order
+        # Use a ? parameter to inject a variable's value
+        # into the SQL statement.
+        db_cursor.execute("""
+        SELECT
+            o.id,
+            o.timestamp,
+            o.metal_id,
+            o.size_id,
+            o.style_id,
+            o.type_id
+        FROM Orders o
+        WHERE o.id = ?
+        """, ( id, ))
 
-    return requested_order
+        # Load the single result into memory
+        data = db_cursor.fetchone()
+
+        # Create an order instance from the current row
+        order = Orders(data['id'], data['timestamp'], data['metal_id'],
+                            data['size_id'], data['style_id'],
+                            data['type_id'])
+
+        return order.__dict__
 
 def create_order(order):
     """Function to add order via POST request"""
