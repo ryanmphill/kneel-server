@@ -72,3 +72,23 @@ INSERT INTO `Orders` VALUES (null, 1684513830825, 1, 1, 2, 3);
 
 SELECT * FROM Orders;
 
+SELECT
+            o.id,
+            o.timestamp,
+            o.metal_id,
+            o.size_id,
+            o.style_id,
+            o.type_id,
+            m.metal,
+            m.price,
+            sz.carets,
+            sz.price,
+            st.style,
+            st.price,
+            t.name,
+            t.price_multiplier
+        FROM Orders o
+        JOIN Metals m ON m.id = o.metal_id
+        JOIN Sizes sz ON sz.id = o.size_id
+        JOIN Styles st ON st.id = o.style_id
+        JOIN Types t ON t.id = o.type_id;

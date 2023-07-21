@@ -1,5 +1,5 @@
 import sqlite3
-from models import Orders
+from models import Orders, Metals, Sizes, Styles, Types
 
 ORDERS = [
     {
@@ -77,8 +77,20 @@ def get_all_orders():
             o.metal_id,
             o.size_id,
             o.style_id,
-            o.type_id
+            o.type_id,
+            m.metal,
+            m.price metal_price,
+            sz.carets,
+            sz.price size_price,
+            st.style,
+            st.price style_price,
+            t.name type_name,
+            t.price_multiplier
         FROM Orders o
+        JOIN Metals m ON m.id = o.metal_id
+        JOIN Sizes sz ON sz.id = o.size_id
+        JOIN Styles st ON st.id = o.style_id
+        JOIN Types t ON t.id = o.type_id
         """)
 
         # Initialize an empty list to hold all representations
@@ -98,6 +110,25 @@ def get_all_orders():
                             row['size_id'], row['style_id'],
                             row['type_id'])
 
+            # Create a Metal instance from the current row
+            metal = Metals(row['metal_id'], row['metal'], row['metal_price'])
+
+            # Create a Size instance from the current row
+            size = Sizes(row['size_id'], row['carets'], row['size_price'])
+
+            # Create a Style instance from the current row
+            style = Styles(row['style_id'], row['style'], row['style_price'])
+
+             # Create a Type instance from the current row
+            type = Types(row['type_id'], row['type_name'], row['price_multiplier'])
+
+            # Add the dictionary representation of the foreign dictionaries to the order
+            order.metal = metal.__dict__
+            order.size = size.__dict__
+            order.style = style.__dict__
+            order.type = type.__dict__
+
+            # Add the dictionary representation to the orders list
             all_orders.append(order.__dict__)
 
     return all_orders
@@ -119,8 +150,20 @@ def get_single_order(id):
             o.metal_id,
             o.size_id,
             o.style_id,
-            o.type_id
+            o.type_id,
+            m.metal,
+            m.price metal_price,
+            sz.carets,
+            sz.price size_price,
+            st.style,
+            st.price style_price,
+            t.name type_name,
+            t.price_multiplier
         FROM Orders o
+        JOIN Metals m ON m.id = o.metal_id
+        JOIN Sizes sz ON sz.id = o.size_id
+        JOIN Styles st ON st.id = o.style_id
+        JOIN Types t ON t.id = o.type_id
         WHERE o.id = ?
         """, ( id, ))
 
@@ -132,6 +175,25 @@ def get_single_order(id):
             order = Orders(data['id'], data['timestamp'], data['metal_id'],
                                 data['size_id'], data['style_id'],
                                 data['type_id'])
+
+            # Create a Metal instance from the current row
+            metal = Metals(data['metal_id'], data['metal'], data['metal_price'])
+
+            # Create a Size instance from the current row
+            size = Sizes(data['size_id'], data['carets'], data['size_price'])
+
+            # Create a Style instance from the current row
+            style = Styles(data['style_id'], data['style'], data['style_price'])
+
+            # Create a Type instance from the current row
+            type = Types(data['type_id'], data['type_name'], data['price_multiplier'])
+
+            # Add the dictionary representation of the foreign dictionaries to the order
+            order.metal = metal.__dict__
+            order.size = size.__dict__
+            order.style = style.__dict__
+            order.type = type.__dict__
+
             single_order_response = order.__dict__
 
         return single_order_response

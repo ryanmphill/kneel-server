@@ -8,3 +8,7 @@ class Orders():
         self.size_id = size_id
         self.style_id = style_id
         self.type_id = type_id
+        self.metal = None
+        self.size = None
+        self.style = None
+        self.type = None
