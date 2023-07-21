@@ -2,7 +2,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_all_metals, get_all_sizes, get_all_styles, get_all_orders, get_all_types
 from views import get_single_metal, get_single_order, get_single_size, get_single_style
-from views import create_order, get_single_type, delete_order, update_order
+from views import create_order, get_single_type, delete_order, update_order, update_metal
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Controls the functionality of any GET, PUT, POST, DELETE requests to the server
@@ -143,12 +143,18 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Update a single order in the list
         if resource == "orders":
             try_update = update_order(id, post_body)
-            if try_update == "success":
+            if try_update is True:
+                self._set_headers(204)
+            else:
+                self._set_headers(404)
+        elif resource == "metals":
+            try_update = update_metal(id, post_body)
+            if try_update is True:
                 self._set_headers(204)
             else:
                 self._set_headers(404)
         else:
-            self._set_headers(403)
+            self._set_headers(405)
 
         # Empty response
         self.wfile.write("".encode())

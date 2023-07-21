@@ -186,15 +186,32 @@ def delete_order(id):
     return result
 
 def update_order(id, new_order):
-    """Update an order in the list"""
-    # Iterate the ORDERS list, but use enumerate() so that
-    # you can access the index value of each item.
-    update_status = None
+    """Make an update to the order row"""
+    with sqlite3.connect("./kneeldiamonds.sqlite3") as conn:
+        db_cursor = conn.cursor()
 
-    for index, order in enumerate(ORDERS):
-        if order["id"] == id:
-            # Found the order. Update the value.
-            ORDERS[index] = new_order
-            update_status = "success"
-            break
-    return update_status
+        db_cursor.execute("""
+        UPDATE Orders
+            SET
+                timestamp = ?,
+                metal_id = ?,
+                size_id = ?,
+                style_id = ?,
+                type_id = ?
+        WHERE id = ?
+        """, (new_order['timestamp'], new_order['metal_id'],
+              new_order['size_id'], new_order['style_id'],
+              new_order['type_id'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        result = False
+    else:
+        # Forces 204 response by main module
+        result = True
+
+    return result
