@@ -108,6 +108,8 @@ def get_single_order(id):
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
+        single_order_response = None
+
         # Use a ? parameter to inject a variable's value
         # into the SQL statement.
         db_cursor.execute("""
@@ -125,12 +127,14 @@ def get_single_order(id):
         # Load the single result into memory
         data = db_cursor.fetchone()
 
-        # Create an order instance from the current row
-        order = Orders(data['id'], data['timestamp'], data['metal_id'],
-                            data['size_id'], data['style_id'],
-                            data['type_id'])
+        if data is not None:
+            # Create an order instance from the current row
+            order = Orders(data['id'], data['timestamp'], data['metal_id'],
+                                data['size_id'], data['style_id'],
+                                data['type_id'])
+            single_order_response = order.__dict__
 
-        return order.__dict__
+        return single_order_response
 
 def create_order(new_order):
     """Insert new order into database Table"""
@@ -160,26 +164,26 @@ def create_order(new_order):
     return new_order
 
 def delete_order(id):
-    """Delete order from list"""
-    # Initial -1 value for order index, in case one isn't found
-    order_index = -1
+    """Delete order from database"""
+    with sqlite3.connect("./kneeldiamonds.sqlite3") as conn:
+        db_cursor = conn.cursor()
 
-    # Set status of delete to None by default
-    delete_status = None
+        db_cursor.execute("""
+        DELETE FROM Orders
+        WHERE id = ?
+        """, (id, ))
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
 
-    # Iterate the ORDERS list, but use enumerate() so that you
-    # can access the index value of each item
-    for index, order in enumerate(ORDERS):
-        if order["id"] == id:
-            # Found the order. Store the current index.
-            order_index = index
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        result = False
+    else:
+        # Forces 204 response by main module
+        result = True
 
-    # If the order was found, use pop(int) to remove it from list
-    if order_index >= 0:
-        ORDERS.pop(order_index)
-        delete_status = "success"
-
-    return delete_status
+    return result
 
 def update_order(id, new_order):
     """Update an order in the list"""

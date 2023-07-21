@@ -163,7 +163,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Delete a single order from the list
         if resource == "orders":
             try_delete = delete_order(id)
-            if try_delete == "success":
+            if try_delete is True:
                 # Set a 204 response code
                 self._set_headers(204)
             else:
